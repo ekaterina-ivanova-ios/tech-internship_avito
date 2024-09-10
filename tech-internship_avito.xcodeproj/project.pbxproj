@@ -22,6 +22,7 @@
 		1F6581552C8F80F8000C4C32 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6581542C8F80F8000C4C32 /* CustomNavigationController.swift */; };
 		1F6581572C8F8461000C4C32 /* DetailViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6581562C8F8461000C4C32 /* DetailViewDelegate.swift */; };
 		1F65815A2C8F8820000C4C32 /* MediaContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6581592C8F8820000C4C32 /* MediaContentModel.swift */; };
+		1F65815C2C90BE69000C4C32 /* Resourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F65815B2C90BE69000C4C32 /* Resourse.swift */; };
 		1FC07D892C8EDD420066F468 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC07D882C8EDD420066F468 /* AppDelegate.swift */; };
 		1FC07D8B2C8EDD420066F468 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC07D8A2C8EDD420066F468 /* SceneDelegate.swift */; };
 		1FC07D8D2C8EDD420066F468 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC07D8C2C8EDD420066F468 /* SearchViewController.swift */; };
@@ -45,6 +46,7 @@
 		1F6581542C8F80F8000C4C32 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 		1F6581562C8F8461000C4C32 /* DetailViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewDelegate.swift; sourceTree = "<group>"; };
 		1F6581592C8F8820000C4C32 /* MediaContentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaContentModel.swift; sourceTree = "<group>"; };
+		1F65815B2C90BE69000C4C32 /* Resourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resourse.swift; sourceTree = "<group>"; };
 		1FC07D852C8EDD420066F468 /* tech-internship_avito.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tech-internship_avito.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FC07D882C8EDD420066F468 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1FC07D8A2C8EDD420066F468 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				1FC07D912C8EDD440066F468 /* Assets.xcassets */,
 				1FC07D932C8EDD440066F468 /* LaunchScreen.storyboard */,
 				1FC07D962C8EDD440066F468 /* Info.plist */,
+				1F65815B2C90BE69000C4C32 /* Resourse.swift */,
 			);
 			path = "tech-internship_avito";
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				1F65813B2C8EF530000C4C32 /* NetworkManager.swift in Sources */,
 				1F6581572C8F8461000C4C32 /* DetailViewDelegate.swift in Sources */,
 				1F65814D2C8EF666000C4C32 /* SearchViewControllerProtocol.swift in Sources */,
+				1F65815C2C90BE69000C4C32 /* Resourse.swift in Sources */,
 				1F65814F2C8EF67A000C4C32 /* SearchViewPresenterProtocol.swift in Sources */,
 				1FC07D8B2C8EDD420066F468 /* SceneDelegate.swift in Sources */,
 				1F65813D2C8EF553000C4C32 /* NetworkRequest.swift in Sources */,

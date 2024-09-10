@@ -17,17 +17,19 @@ enum HttpMethod: String {
 protocol NetworkRequest {
     var endpoint: URL? { get }
     var httpMethod: HttpMethod { get }
-    var dto: Encodable? { get }
 }
 
-// default values
 extension NetworkRequest {
     var httpMethod: HttpMethod { .get }
     var dto: Encodable? { nil }
 }
 
-struct DefaultNetworkRequest: NetworkRequest {
-    let endpoint: URL?
-    let dto: Encodable?
-    let httpMethod: HttpMethod
+
+struct SearchCollectionGetRequest: NetworkRequest {
+    var endpoint: URL? {
+        //URL(string: Resourses.Network.baseURL + Resourses.Network.Paths.profile)
+        URL(string: "https://api.unsplash.com/search/collections")
+    }
+    var httpMethod: HttpMethod { .get }
 }
+
