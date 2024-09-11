@@ -16,7 +16,7 @@ final class SearchPresenter {
     // тут должен быть сторадж
     var searchHistory = ["Previous1", "Example", "Another search", "History", "Content"]
     var filteredSuggestions = [String]()
-    var cellModels = [MediaContent]()
+    var cellModels = [PhotoCollectionCellModel]()
     
     init(photoSearchService: PhotoSearchServiceProtocol) {
         self.photoSearchService = photoSearchService
@@ -38,7 +38,7 @@ final class SearchPresenter {
                     guard let url = URL(string: $0.urls.small) else {
                         return nil
                     }
-                    return MediaContent(title: "",
+                    return PhotoCollectionCellModel(title: "",
                                         description: description,
                                         author: $0.user.name,
                                         imageUrl: url,

@@ -21,16 +21,3 @@ protocol NetworkRequest {
     var httpMethod: HttpMethod { get }
     var queryItems: [URLQueryItem] { get }
 }
-
-struct SearchPhotoGetRequest: NetworkRequest {
-    
-    var endpoint: String {
-        NetworkConstant.baseUrl + "/search/photos"
-    }
-    
-    var httpMethod: HttpMethod {
-        .get
-    }
-
-    let queryItems: [URLQueryItem]
-}

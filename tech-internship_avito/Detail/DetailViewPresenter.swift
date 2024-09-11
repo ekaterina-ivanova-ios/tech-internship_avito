@@ -11,7 +11,7 @@ final class DetailViewPresenter: DetailViewPresenterProtocol {
    
     var view: (any DetailViewControllerProtocol)?
     
-    var detailModel: MediaContent?
+    var detailModel: PhotoCollectionCellModel?
     
     func fetchData() {
         

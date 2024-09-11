@@ -24,9 +24,8 @@ final class SearchViewCell: UICollectionViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .boldSystemFont(ofSize: 14)
+        label.font = .italicSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
         return label
     }()
     
@@ -68,7 +67,7 @@ final class SearchViewCell: UICollectionViewCell {
         ])
     }
     
-    func configureCell(info: MediaContent) {
+    func configureCell(info: PhotoCollectionCellModel) {
         mediaImage.downloadImage(from: info.imageUrl)
         titleLabel.text = info.description
     }

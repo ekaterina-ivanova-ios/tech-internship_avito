@@ -10,7 +10,8 @@ import UIKit
 final class SearchViewController: UIViewController {
     
     private let searchBar = UISearchBar()
-    private let tableView = UITableView()
+    private let tipsTableView = UITableView()
+//    private let resultCollectionView = UICollectionView()
     private let resultCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -18,6 +19,28 @@ final class SearchViewController: UIViewController {
         layout.minimumInteritemSpacing = 10
         layout.itemSize = CGSize(width: (UIScreen.main.bounds.width/2) - 20, height: (UIScreen.main.bounds.width/2) - 20)
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
+    }()
+    
+    lazy var listSortedButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.addTarget(self, action: #selector(changeToListView), for: .touchUpInside)
+        button.setImage(UIImage(systemName: "list.bullet"), for: .normal)
+        button.tintColor = .systemGray
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 20
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    lazy var panelSortedButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.addTarget(self, action: #selector(changeToPanelView), for: .touchUpInside)
+        button.setImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
+        button.tintColor = .systemGray
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 20
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private let presenter: SearchPresenterProtocol
@@ -43,7 +66,8 @@ final class SearchViewController: UIViewController {
         
         // Setup searchBar
         searchBar.delegate = self
-        searchBar.placeholder = "Поиск медиа контента..."
+        searchBar.placeholder = "Enters a search term..."
+        searchBar.backgroundImage = UIImage()
         view.addSubview(searchBar)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -52,17 +76,35 @@ final class SearchViewController: UIViewController {
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        // Setup suggestionTableView
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SuggestionCell")
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        //Setup panelSortedButton
+        view.addSubview(panelSortedButton)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 200)
+            panelSortedButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 5),
+            panelSortedButton.trailingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: -5),
+            panelSortedButton.widthAnchor.constraint(equalToConstant: 40),
+            panelSortedButton.heightAnchor.constraint(equalToConstant: 40),
+        ])
+        
+        //Setup listSortedButton
+        view.addSubview(listSortedButton)
+        NSLayoutConstraint.activate([
+            listSortedButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 5),
+            listSortedButton.trailingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: -40),
+            listSortedButton.widthAnchor.constraint(equalToConstant: 40),
+            listSortedButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        // Setup tipsTableView
+        tipsTableView.delegate = self
+        tipsTableView.dataSource = self
+        tipsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "SuggestionCell")
+        view.addSubview(tipsTableView)
+        tipsTableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tipsTableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            tipsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tipsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tipsTableView.heightAnchor.constraint(equalToConstant: 200)
         ])
         
         // Setup resultCollectionView
@@ -72,7 +114,7 @@ final class SearchViewController: UIViewController {
         view.addSubview(resultCollectionView)
         resultCollectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            resultCollectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            resultCollectionView.topAnchor.constraint(equalTo: panelSortedButton.bottomAnchor, constant: 10),
             resultCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             resultCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             resultCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -80,9 +122,31 @@ final class SearchViewController: UIViewController {
     }
     
     func updateCollection() {
-        tableView.isHidden = true
+        tipsTableView.isHidden = true
         resultCollectionView.isHidden = false
         resultCollectionView.reloadData()
+    }
+    
+    
+    @objc func changeToPanelView() {
+        let layout = UICollectionViewFlowLayout()
+                layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                layout.minimumLineSpacing = 10
+                layout.minimumInteritemSpacing = 10
+                layout.itemSize = CGSize(width: (UIScreen.main.bounds.width/2) - 20, height: (UIScreen.main.bounds.width/2) - 20)
+        
+        resultCollectionView.setCollectionViewLayout(layout, animated: true)
+    }
+    
+    
+    @objc func changeToListView() {
+        let layout = UICollectionViewFlowLayout()
+                layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                layout.minimumLineSpacing = 10
+                layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 20, height: UIScreen.main.bounds.width - 20)
+        
+        resultCollectionView.setCollectionViewLayout(layout, animated: true)
+       
     }
     
 }
@@ -92,9 +156,11 @@ extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 //        // Update suggestions based on input
         presenter.textDidChange(searchText)
-//        filteredSuggestions = searchHistory.filter { $0.lowercased().contains(searchText.lowercased()) }
-//        suggestionTableView.isHidden = filteredSuggestions.isEmpty
-//        suggestionTableView.reloadData()
+//        presenter.filteredSuggestions = searchHistory.filter { $0.lowercased().contains(searchText.lowercased()) }
+//        tipsTableView.isHidden = filteredSuggestions.isEmpty
+        tipsTableView.isHidden = false
+        self.view.bringSubviewToFront(tipsTableView)
+//        tipsTableView.reloadData()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -179,5 +245,5 @@ extension SearchViewController: SearchViewCellDelegate{
         print("like")
     }
     
-    
 }
+

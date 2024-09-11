@@ -113,7 +113,7 @@ extension DetailViewController {
         ])
     }
     
-    private func setupContent(info: MediaContent) {
+    private func setupContent(info: PhotoCollectionCellModel) {
         detailView.mediaNameLabel.text = info.title
         detailView.mediaDescriptionLabel.text = info.description
         detailView.authorLabel.text = info.author

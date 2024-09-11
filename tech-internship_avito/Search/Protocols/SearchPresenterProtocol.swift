@@ -10,7 +10,7 @@ import Foundation
 protocol SearchPresenterProtocol: AnyObject {
     
     var filteredSuggestions: [String] { get }
-    var cellModels: [MediaContent] { get }
+    var cellModels: [PhotoCollectionCellModel] { get }
     
     func viewDidLoad()
     func textDidChange(_ searchText: String)
