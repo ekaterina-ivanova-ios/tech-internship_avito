@@ -8,6 +8,7 @@ import Foundation
 
 enum PhotoSearchParameter {
     case query(_ query: String)
+    case perPage(_ count: Int)
 }
 
 /// Сервис для выполнения поиска фотографий
@@ -25,18 +26,22 @@ final class PhotoSearchService: PhotoSearchServiceProtocol {
     init(networkManager: NetworkClient) {
         self.networkManager = networkManager
     }
-
+    
     func searchPhotos(
         parameters: [PhotoSearchParameter],
         completion: @escaping (Result<SearchResponse, Error>) -> Void
     ) {
-
+        
         let queryItems = parameters.map {
             switch $0 {
             case .query(let query):
                 URLQueryItem(name: "query", value: query)
+            case .perPage(let count):
+                URLQueryItem(name: "per_page", value: "\(count)")
             }
         }
+        
+        
         let request = SearchPhotoGetRequest(queryItems: queryItems)
         networkManager.send(
             request: request,
@@ -55,7 +60,7 @@ struct SearchResponse: Codable {
     let total: Int
     let totalPages: Int
     let results: [Photo]
-
+    
     enum CodingKeys: String, CodingKey {
         case total
         case totalPages = "total_pages"
@@ -78,7 +83,7 @@ struct Photo: Codable {
     let currentUserCollections: [UserCollection]
     let urls: Urls
     let links: PhotoLinks
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case createdAt = "created_at"
@@ -108,7 +113,7 @@ struct User: Codable {
     let portfolioURL: String?
     let profileImage: ProfileImage
     let links: UserLinks
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case username
@@ -136,7 +141,7 @@ struct UserLinks: Codable {
     let html: String
     let photos: String
     let likes: String
-
+    
     enum CodingKeys: String, CodingKey {
         case selfLink = "self"
         case html
@@ -164,7 +169,7 @@ struct PhotoLinks: Codable {
     let selfLink: String
     let html: String
     let download: String
-
+    
     enum CodingKeys: String, CodingKey {
         case selfLink = "self"
         case html

@@ -11,8 +11,23 @@ struct ModuleAssembly {
     
     static func makeSearchModule() -> UIViewController {
         let photoService = DIContainer.shared.getPhotoService()
-        let presenter = SearchPresenter(photoSearchService: photoService)
+        let searchHistoryStorage = DIContainer.shared.getSearchHistoryStorage()
+        let presenter = SearchPresenter(
+            photoSearchService: photoService,
+            searchHistoryStorage: searchHistoryStorage
+        )
         let view = SearchViewController(presenter: presenter)
+        
+        presenter.view = view
+        
+        return view
+    }
+    
+    static func makeDetailModule(_ detailModel: PhotoCollectionCellModel) -> UIViewController {
+        let presenter = DetailViewPresenter(
+          detailModel: detailModel
+        )
+        let view = DetailViewController(presenter: presenter)
         
         presenter.view = view
         

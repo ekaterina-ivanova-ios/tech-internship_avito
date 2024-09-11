@@ -8,5 +8,8 @@
 import Foundation
 
 protocol SearchViewControllerProtocol: AnyObject {
-    
+    func updateCollection()
+    func updateTipsTableView()
+    func updateSearchBarText(_ text: String)
+    func updateState(_ state: SearchState)
 }

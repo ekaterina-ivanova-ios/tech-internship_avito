@@ -9,14 +9,17 @@ import Foundation
 
 final class DetailViewPresenter: DetailViewPresenterProtocol {
    
-    var view: (any DetailViewControllerProtocol)?
+    weak var view: DetailViewControllerProtocol?
     
-    var detailModel: PhotoCollectionCellModel?
+    private let detailModel: PhotoCollectionCellModel
     
-    func fetchData() {
-        
+    init(detailModel: PhotoCollectionCellModel) {
+        self.detailModel = detailModel
     }
     
+    func viewDidLoad() {
+        view?.update(with: detailModel)
+    }
 
     
 }

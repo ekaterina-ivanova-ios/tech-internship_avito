@@ -6,9 +6,9 @@
 //
 
 import Foundation
+import UIKit
 
 protocol DetailViewDelegate: AnyObject {
-    func tappedShare()
-    func tappedDownload()
-    func tappedBack()
+    func didTapShareButton(image: UIImage)
+    func didTapDownloadButton(image: UIImage)
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol DetailViewControllerProtocol: AnyObject {
-    var presenter: DetailViewPresenterProtocol? { get set }
     func reloadCollectionView()
     func showErrorAlert()
+    func update(with model: PhotoCollectionCellModel)
 }

@@ -11,7 +11,6 @@ final class SearchViewController: UIViewController {
     
     private let searchBar = UISearchBar()
     private let tipsTableView = UITableView()
-//    private let resultCollectionView = UICollectionView()
     private let resultCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -43,6 +42,17 @@ final class SearchViewController: UIViewController {
         return button
     }()
     
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = .darkGray
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
+    private lazy var tableViewHeightConstraint = tipsTableView.heightAnchor.constraint(equalToConstant: 0)
+    private var errorView: ErrorView?
+    
     private let presenter: SearchPresenterProtocol
     
     init(presenter: SearchPresenterProtocol) {
@@ -59,6 +69,7 @@ final class SearchViewController: UIViewController {
         
         setupUI()
         presenter.viewDidLoad()
+        self.title = "SearchPage"
     }
     
     private func setupUI() {
@@ -119,14 +130,43 @@ final class SearchViewController: UIViewController {
             resultCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             resultCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+
+        setupActivityIndicator()
     }
     
-    func updateCollection() {
-        tipsTableView.isHidden = true
-        resultCollectionView.isHidden = false
-        resultCollectionView.reloadData()
+    private func setupActivityIndicator() {
+        view.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
+    private func showError(viewModel: ErrorViewModel) {
+        errorView = ErrorView(viewModel: viewModel)
+        guard let errorView else {
+            return
+        }
+        view.addSubview(errorView)
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            errorView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 50)
+        ])
+    }
+    
+    private func hideError() {
+        errorView?.removeFromSuperview()
+        errorView = nil
+    }
+    
+    private func updateTableViewHeight() {
+        tipsTableView.layoutIfNeeded()
+        tableViewHeightConstraint.constant = tipsTableView.contentSize.height
+    }
     
     @objc func changeToPanelView() {
         let layout = UICollectionViewFlowLayout()
@@ -151,49 +191,54 @@ final class SearchViewController: UIViewController {
     
 }
 
+extension SearchViewController: SearchViewControllerProtocol {
+    
+    func updateCollection() {
+        tipsTableView.isHidden = true
+        resultCollectionView.isHidden = false
+        resultCollectionView.reloadData()
+    }
+    
+    func updateTipsTableView() {
+        tipsTableView.isHidden = false
+        view.bringSubviewToFront(tipsTableView)
+        tipsTableView.reloadData()
+        updateTableViewHeight()
+    }
+    
+    func updateSearchBarText(_ text: String) {
+        searchBar.text = text
+    }
+    
+    func updateState(_ state: SearchState) {
+        hideError()
+        switch state {
+        case .loading:
+            tipsTableView.isHidden = true
+            resultCollectionView.isHidden = true
+            activityIndicator.startAnimating()
+        case .error(let viewModel):
+            activityIndicator.stopAnimating()
+            showError(viewModel: viewModel)
+        case .default:
+            resultCollectionView.isHidden = false
+            activityIndicator.stopAnimating()
+        }
+        
+    }
+}
+
 extension SearchViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        // Update suggestions based on input
         presenter.textDidChange(searchText)
-//        presenter.filteredSuggestions = searchHistory.filter { $0.lowercased().contains(searchText.lowercased()) }
-//        tipsTableView.isHidden = filteredSuggestions.isEmpty
         tipsTableView.isHidden = false
-        self.view.bringSubviewToFront(tipsTableView)
-//        tipsTableView.reloadData()
+        view.bringSubviewToFront(tipsTableView)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // Perform search
         presenter.searchButtonClicked(searchBar.text ?? "")
-//        performSearch(query: searchBar.text ?? "")
         searchBar.resignFirstResponder()
-    }
-    
-    private func performSearch(query: String) {
-        // Save to history
-//        addQueryToHistory(query)
-        
-        // Call API to search and update `searchResults`
-        
-        // Reload resultCollectionView
-        
-        
-        // Example reload
-//        searchResults = [MediaContent(title: "Books", description: "Amazing stories", author: "Peter", imageUrl: "photo", id: "1"), MediaContent(title: "Books", description: "Amazing stories", author: "Peter", imageUrl: "photo", id: "1")]
-//        resultCollectionView.reloadData()
-    }
-    
-    private func addQueryToHistory(_ query: String) {
-//        guard !query.isEmpty else { return }
-//        if let index = searchHistory.firstIndex(of: query) {
-//            searchHistory.remove(at: index)
-//        }
-//        searchHistory.insert(query, at: 0)
-//        if searchHistory.count > 5 {
-//            searchHistory.removeLast()
-//        }
-        // Save updated history to UserDefaults or other storage
     }
 }
 
@@ -209,10 +254,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Use suggestion selected
-//        let selectedQuery = filteredSuggestions[indexPath.row]
-//        searchBar.text = selectedQuery
-//        performSearch(query: selectedQuery)
+        presenter.didSelectTip(at: indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        UITableView.automaticDimension
     }
 }
 
@@ -234,7 +280,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // Open detail view controller with selected item
-        let detailVC = DetailViewController()
+        let model = presenter.cellModels[indexPath.row]
+        let detailVC = ModuleAssembly.makeDetailModule(model)
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
@@ -246,4 +293,3 @@ extension SearchViewController: SearchViewCellDelegate{
     }
     
 }
-

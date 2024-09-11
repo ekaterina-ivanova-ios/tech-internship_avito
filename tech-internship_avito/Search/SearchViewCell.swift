@@ -56,8 +56,6 @@ final class SearchViewCell: UICollectionViewCell {
             mediaImage.topAnchor.constraint(equalTo: contentView.topAnchor),
             mediaImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             mediaImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//            mediaImage.heightAnchor.constraint(equalToConstant: 80),
-//            mediaImage.widthAnchor.constraint(equalToConstant: 80),
             //titleLabel
             titleLabel.topAnchor.constraint(equalTo: mediaImage.bottomAnchor, constant: 20),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

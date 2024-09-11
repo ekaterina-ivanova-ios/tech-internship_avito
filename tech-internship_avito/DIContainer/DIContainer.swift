@@ -9,6 +9,11 @@ import Foundation
 
 final class DIContainer {
     
+    // Storages
+    
+    private var searchHistoryStorage: SearchHistoryStorageProtocol?
+    
+    
     // Managers
     
     private var networkManager: NetworkManager?
@@ -26,6 +31,16 @@ final class DIContainer {
             let newManager = NetworkManager()
             self.networkManager = newManager
             return newManager
+        }
+    }
+    
+    func getSearchHistoryStorage() -> SearchHistoryStorageProtocol {
+        if let searchHistoryStorage {
+            return searchHistoryStorage
+        } else {
+            let searchHistoryStorage = SearchHistoryStorage()
+            self.searchHistoryStorage = searchHistoryStorage
+            return searchHistoryStorage
         }
     }
     
