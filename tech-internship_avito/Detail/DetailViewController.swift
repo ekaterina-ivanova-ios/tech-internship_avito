@@ -10,14 +10,6 @@ import UIKit
 class DetailViewController: UIViewController, DetailViewControllerProtocol {
     
     var presenter: DetailViewPresenterProtocol?
-    
-    //hardCode
-    var detailModel = MediaContent(
-        title: "Books",
-        description: "Amazing stories Amazing stories Amazing stories Amazing stories Amazing stories Amazing stories Amazing stories Amazing stories Amazing stories Amazing stories",
-        author: "author: Peter",
-        imageUrl: "photo1",
-        id: "1")
   
     private let detailView = DetailView()
     
@@ -30,7 +22,7 @@ class DetailViewController: UIViewController, DetailViewControllerProtocol {
     
     required init?(coder aDecoder: NSCoder) {
             super.init(coder: aDecoder)
-        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,7 +73,6 @@ extension DetailViewController {
         view.addSubview(detailView.backButton)
         view.addSubview(detailView.downloadButton)
         view.addSubview(detailView.shareButton)
-        setupContent(info: detailModel)
         setupConstraints()
     }
     
@@ -123,7 +114,6 @@ extension DetailViewController {
     }
     
     private func setupContent(info: MediaContent) {
-        detailView.mediaCover.image = UIImage(named: info.imageUrl)
         detailView.mediaNameLabel.text = info.title
         detailView.mediaDescriptionLabel.text = info.description
         detailView.authorLabel.text = info.author

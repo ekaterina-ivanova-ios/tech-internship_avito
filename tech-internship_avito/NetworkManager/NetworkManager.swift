@@ -84,19 +84,18 @@ final class NetworkManager: NetworkClient {
     // MARK: - Private
 
     private func create(request: NetworkRequest) -> URLRequest? {
-        guard let endpoint = request.endpoint else {
-            assertionFailure("Empty endpoint")
+
+        var components = URLComponents(string: request.endpoint)
+        components?.queryItems = request.queryItems
+        
+        guard let url = components?.url else {
+            assertionFailure()
             return nil
         }
-
-        var urlRequest = URLRequest(url: endpoint)
+        
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = request.httpMethod.rawValue
-
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            urlRequest.httpBody = dtoEncoded
-        }
+        urlRequest.setValue("Client-ID \(NetworkConstant.accessKey)", forHTTPHeaderField: "Authorization")
 
         return urlRequest
     }

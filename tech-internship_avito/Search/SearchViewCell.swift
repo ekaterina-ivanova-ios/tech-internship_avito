@@ -69,7 +69,7 @@ final class SearchViewCell: UICollectionViewCell {
     }
     
     func configureCell(info: MediaContent) {
-        mediaImage.image = UIImage(named: info.imageUrl)
-        titleLabel.text = info.title
+        mediaImage.downloadImage(from: info.imageUrl)
+        titleLabel.text = info.description
     }
 }

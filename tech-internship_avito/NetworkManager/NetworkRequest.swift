@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Foundation
+
 enum HttpMethod: String {
     case get = "GET"
     case post = "POST"
@@ -15,21 +17,20 @@ enum HttpMethod: String {
 }
 
 protocol NetworkRequest {
-    var endpoint: URL? { get }
+    var endpoint: String { get }
     var httpMethod: HttpMethod { get }
+    var queryItems: [URLQueryItem] { get }
 }
 
-extension NetworkRequest {
-    var httpMethod: HttpMethod { .get }
-    var dto: Encodable? { nil }
-}
-
-
-struct SearchCollectionGetRequest: NetworkRequest {
-    var endpoint: URL? {
-        //URL(string: Resourses.Network.baseURL + Resourses.Network.Paths.profile)
-        URL(string: "https://api.unsplash.com/search/collections")
+struct SearchPhotoGetRequest: NetworkRequest {
+    
+    var endpoint: String {
+        NetworkConstant.baseUrl + "/search/photos"
     }
-    var httpMethod: HttpMethod { .get }
-}
+    
+    var httpMethod: HttpMethod {
+        .get
+    }
 
+    let queryItems: [URLQueryItem]
+}
