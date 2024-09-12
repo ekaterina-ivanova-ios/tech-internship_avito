@@ -40,7 +40,7 @@ final class SearchPresenter {
             return
         }
         isLoading = true
-        photoSearchService.searchPhotos(parameters: [.query(searchText), .perPage(30)]) { [weak self] result in
+        photoSearchService.searchPhotos(parameters: [.query(searchText), .perPage(Constant.SearchPhotos.perPageCount)]) { [weak self] result in
             guard let self else {
                 return
             }
@@ -55,9 +55,9 @@ final class SearchPresenter {
     }
     
     private func handleDidGet(error: Error, searchText: String) {
-        print("Did get error: ", error)
+        print(Constant.AlertTetx.errorText, error.localizedDescription)
         let model = ErrorViewModel(
-            errorMessage: "Не удалось загрузить контент. Пожалуйста, попробуйте еще раз"
+            errorMessage: Constant.AlertTetx.reloadPageText
         ) { [weak self] in
             self?.searchPhotos(searchText)
         }
@@ -85,10 +85,6 @@ final class SearchPresenter {
 }
 
 extension SearchPresenter: SearchPresenterProtocol {
-    
-    func viewDidLoad() {
-        
-    }
     
     func textDidChange(_ searchText: String) {
         let history = searchHistoryStorage.getHistory()

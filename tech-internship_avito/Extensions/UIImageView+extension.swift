@@ -18,7 +18,11 @@ extension UIImageView {
                     self.image = image
                 }
             }
-            // здесь нужно обработать ошибку загрузки изображения
+            else {
+                DispatchQueue.main.async {
+                    self.image = UIImage(systemName: "photo.on.rectangle.angled")
+                }
+            }
         }
         task.resume()
     }

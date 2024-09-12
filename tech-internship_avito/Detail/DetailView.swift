@@ -9,6 +9,8 @@ import UIKit
 
 final class DetailView: UIView {
     
+    weak var delegate: DetailViewDelegate?
+    
     private lazy var mediaCoverImageView: UIImageView = {
         var image = UIImageView()
         image.layer.cornerRadius = 40
@@ -38,7 +40,7 @@ final class DetailView: UIView {
     private lazy var shareButton: UIButton = {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(didTapShareButton), for: .touchUpInside)
-        button.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        button.setImage(Constant.ButtonImage.shareButton, for: .normal)
         button.tintColor = .black
         button.backgroundColor = .white
         button.layer.cornerRadius = 20
@@ -49,23 +51,13 @@ final class DetailView: UIView {
     private lazy var downloadButton: UIButton = {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(didTapDownloadButton), for: .touchUpInside)
-        button.setImage(UIImage(systemName: "arrow.down.circle"), for: .normal)
+        button.setImage(Constant.ButtonImage.downloadButton, for: .normal)
         button.tintColor = .black
         button.backgroundColor = .white
         button.layer.cornerRadius = 20
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    weak var delegate: DetailViewDelegate?
-    
-    @objc private func didTapShareButton() {
-        delegate?.didTapShareButton(image: mediaCoverImageView.image ?? UIImage())
-    }
-    
-    @objc private func didTapDownloadButton() {
-        delegate?.didTapDownloadButton(image: mediaCoverImageView.image ?? UIImage())
-    }
     
     // MARK: - Lifecycle
     
@@ -79,6 +71,14 @@ final class DetailView: UIView {
     }
     
     // MARK: - Methods
+    
+    @objc private func didTapShareButton() {
+        delegate?.didTapShareButton(image: mediaCoverImageView.image ?? UIImage())
+    }
+    
+    @objc private func didTapDownloadButton() {
+        delegate?.didTapDownloadButton(image: mediaCoverImageView.image ?? UIImage())
+    }
     
     func configure(with model: PhotoCollectionCellModel) {
         mediaCoverImageView.downloadImage(from: model.imageUrl)
@@ -101,7 +101,6 @@ final class DetailView: UIView {
             mediaCoverImageView.topAnchor.constraint(equalTo: topAnchor),
             mediaCoverImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             mediaCoverImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            mediaCoverImageView.heightAnchor.constraint(equalToConstant: 700),
             //authorLabel
             authorLabel.topAnchor.constraint(equalTo: mediaCoverImageView.bottomAnchor, constant: 15),
             authorLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
@@ -119,7 +118,6 @@ final class DetailView: UIView {
             downloadButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -70),
             downloadButton.heightAnchor.constraint(equalToConstant: 40),
             downloadButton.widthAnchor.constraint(equalToConstant: 40),
-            
             
         ])
     }

@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol SearchViewCellDelegate: AnyObject {
-    func didTapped(_ cell: SearchViewCell)
-}
-
 final class SearchViewCell: UICollectionViewCell {
     
     private lazy var mediaImage: UIImageView = {
@@ -28,8 +24,6 @@ final class SearchViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    weak var delegate: SearchViewCellDelegate?
     
     // MARK: - Lifecycle
     

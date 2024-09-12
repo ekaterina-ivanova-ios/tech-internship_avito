@@ -10,16 +10,12 @@ import Foundation
 final class DIContainer {
     
     // Storages
-    
     private var searchHistoryStorage: SearchHistoryStorageProtocol?
     
-    
     // Managers
-    
     private var networkManager: NetworkManager?
     
     // Singleton
-
     static let shared = DIContainer()
     
     private init() { }

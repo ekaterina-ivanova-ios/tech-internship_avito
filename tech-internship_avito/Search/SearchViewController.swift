@@ -20,10 +20,10 @@ final class SearchViewController: UIViewController {
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
     
-    lazy var listSortedButton: UIButton = {
+    private lazy var listSortedButton: UIButton = {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(changeToListView), for: .touchUpInside)
-        button.setImage(UIImage(systemName: "list.bullet"), for: .normal)
+        button.setImage(Constant.ButtonImage.listButton, for: .normal)
         button.tintColor = .systemGray
         button.backgroundColor = .white
         button.layer.cornerRadius = 20
@@ -31,10 +31,10 @@ final class SearchViewController: UIViewController {
         return button
     }()
     
-    lazy var panelSortedButton: UIButton = {
+    private lazy var panelSortedButton: UIButton = {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(changeToPanelView), for: .touchUpInside)
-        button.setImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
+        button.setImage(Constant.ButtonImage.panelButton, for: .normal)
         button.tintColor = .systemGray
         button.backgroundColor = .white
         button.layer.cornerRadius = 20
@@ -68,16 +68,22 @@ final class SearchViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
-        presenter.viewDidLoad()
-        self.title = "SearchPage"
+        setupNavigationBar()
+    }
+    
+    private func setupNavigationBar() {
+        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.darkGray]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        self.title = Constant.Title.titleNavBar
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         // Setup searchBar
         searchBar.delegate = self
-        searchBar.placeholder = "Enters a search term..."
+        searchBar.placeholder = Constant.Title.titleSearchBar
         searchBar.backgroundImage = UIImage()
         view.addSubview(searchBar)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -100,7 +106,7 @@ final class SearchViewController: UIViewController {
         view.addSubview(listSortedButton)
         NSLayoutConstraint.activate([
             listSortedButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 5),
-            listSortedButton.trailingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: -40),
+            listSortedButton.trailingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: -50),
             listSortedButton.widthAnchor.constraint(equalToConstant: 40),
             listSortedButton.heightAnchor.constraint(equalToConstant: 40)
         ])
@@ -108,14 +114,14 @@ final class SearchViewController: UIViewController {
         // Setup tipsTableView
         tipsTableView.delegate = self
         tipsTableView.dataSource = self
-        tipsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "SuggestionCell")
+        tipsTableView.register(UITableViewCell.self, forCellReuseIdentifier: Constant.CellId.cellId)
         view.addSubview(tipsTableView)
         tipsTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tipsTableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             tipsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tipsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tipsTableView.heightAnchor.constraint(equalToConstant: 200)
+            tableViewHeightConstraint
         ])
         
         // Setup resultCollectionView
@@ -130,7 +136,7 @@ final class SearchViewController: UIViewController {
             resultCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             resultCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-
+        
         setupActivityIndicator()
     }
     
@@ -168,25 +174,22 @@ final class SearchViewController: UIViewController {
         tableViewHeightConstraint.constant = tipsTableView.contentSize.height
     }
     
-    @objc func changeToPanelView() {
+    @objc private func changeToPanelView() {
         let layout = UICollectionViewFlowLayout()
-                layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-                layout.minimumLineSpacing = 10
-                layout.minimumInteritemSpacing = 10
-                layout.itemSize = CGSize(width: (UIScreen.main.bounds.width/2) - 20, height: (UIScreen.main.bounds.width/2) - 20)
-        
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        layout.itemSize = CGSize(width: (UIScreen.main.bounds.width/2) - 20, height: (UIScreen.main.bounds.width/2) - 20)
         resultCollectionView.setCollectionViewLayout(layout, animated: true)
     }
     
-    
-    @objc func changeToListView() {
+    @objc private func changeToListView() {
         let layout = UICollectionViewFlowLayout()
-                layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-                layout.minimumLineSpacing = 10
-                layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 20, height: UIScreen.main.bounds.width - 20)
-        
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.minimumLineSpacing = 10
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 20, height: UIScreen.main.bounds.width - 20)
         resultCollectionView.setCollectionViewLayout(layout, animated: true)
-       
+        
     }
     
 }
@@ -248,7 +251,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SuggestionCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.CellId.cellId, for: indexPath)
         cell.textLabel?.text = presenter.filteredSuggestions[indexPath.row]
         return cell
     }
@@ -256,7 +259,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.didSelectTip(at: indexPath)
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }
@@ -273,23 +276,13 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
         
         let cellModel = presenter.cellModels[indexPath.row]
-        cell.delegate = self
         cell.configureCell(info: cellModel)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Open detail view controller with selected item
         let model = presenter.cellModels[indexPath.row]
         let detailVC = ModuleAssembly.makeDetailModule(model)
         navigationController?.pushViewController(detailVC, animated: true)
     }
-}
-
-//SearchViewCellDelegate
-extension SearchViewController: SearchViewCellDelegate{
-    func didTapped(_ cell: SearchViewCell) {
-        print("like")
-    }
-    
 }

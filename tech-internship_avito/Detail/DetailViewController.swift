@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController, DetailViewControllerProtocol {
+final class DetailViewController: UIViewController, DetailViewControllerProtocol {
     
     private let presenter: DetailViewPresenterProtocol
     
@@ -36,34 +36,21 @@ class DetailViewController: UIViewController, DetailViewControllerProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupViews()
         presenter.viewDidLoad()
-        
-        let appearance = UINavigationBarAppearance()
-            appearance.configureWithTransparentBackground()
-            appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-            appearance.buttonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
-            appearance.backgroundColor = UIColor.clear
-            appearance.shadowColor = UIColor.clear
-            
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.compactAppearance = appearance
-            navigationController?.navigationBar.scrollEdgeAppearance = appearance
-
+        setupNavigationBar()
+    }
+    
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.tintColor = .systemGray
     }
     
     func update(with model: PhotoCollectionCellModel) {
         detailView.configure(with: model)
-    }
-    
-    //MARK: DetailViewControllerProtocol
-    func reloadCollectionView() {
-        
-    }
-    
-    func showErrorAlert() {
-        
     }
 }
 
@@ -76,7 +63,6 @@ extension DetailViewController: DetailViewDelegate {
         present(activityViewController, animated: true, completion: nil)
     }
     
-    
     func didTapDownloadButton(image: UIImage) {
         image.saveImageToPhotosAlbum()
     }
@@ -88,22 +74,21 @@ extension DetailViewController: DetailViewDelegate {
 extension DetailViewController {
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
         scrollView.addSubview(detailView)
         setupConstraints()
-        
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            //setup scrollView
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            
-            detailView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+        
+            detailView.topAnchor.constraint(equalTo: view.topAnchor),
             detailView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             detailView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             detailView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),

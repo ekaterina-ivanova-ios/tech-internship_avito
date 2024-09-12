@@ -20,8 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         window?.rootViewController = UINavigationController(rootViewController: ModuleAssembly.makeSearchModule())
-//       DetailViewController()
         window?.makeKeyAndVisible()
+        window?.overrideUserInterfaceStyle = .light
     }
     
 }

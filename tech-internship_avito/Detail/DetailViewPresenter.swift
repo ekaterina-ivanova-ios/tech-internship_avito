@@ -21,7 +21,6 @@ final class DetailViewPresenter: DetailViewPresenterProtocol {
         view?.update(with: detailModel)
     }
 
-    
 }
 
 
